@@ -1,0 +1,105 @@
+Manip de deux API :
+https://restful-api.dev/
+https://adresse.data.gouv.fr/api-doc/adresse
+
+var response = restTemplate.getForEntity("https://api-adresse.data.gouv.fr/search/?q=" + adresse + "&limit=15", AdresseDataGouv.class);
+
+@Bean
+public RestTemplate restTemplate(RestTemplateBuilder builder) {
+	return builder
+			.setConnectTimeout(Duration.ofSeconds(5)) // Timeout de connexion (5 secondes)
+			.setReadTimeout(Duration.ofSeconds(10)) // Timeout de lecture (10 secondes)
+			.build();
+}
+
+Un Advice :
+@ExceptionHandler(AdresseInputMissingException.class)
+public ResponseEntity<Object> handleAdresseInputMissingException(Exception ex, WebRequest request) {
+	return new ResponseEntity<>(new ApiError("00001", "L'adresse renseignée en input est nulle"), HttpStatus.BAD_REQUEST);
+}
+
+Avec l'API Error :
+public class ApiError {
+	private String code;
+	private String libelle;
+	
+	public ApiError(String code, String libelle) {
+		super();
+		this.code = code;
+		this.libelle = libelle;
+	}
+}
+
+
+
+java -jar myapp.war --spring.config.location=/path/to/config/
+
+@Value: Injecte une valeur de propriété (du fichier de configuration) dans un champ.
+
+// EN MODE FICHIER BRUT
+@GetMapping("/pdf/{nomFichier}")
+    public ResponseEntity<InputStreamResource> getPdf(@PathVariable String nomFichier) throws IOException {
+
+	File file = new File("/path/to/pdf/directory/" + nomFichier + ".pdf"); // Chemin vers le PDF
+	InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+	HttpHeaders headers = new HttpHeaders();
+	headers.add("Content-Disposition", "attachment; filename=" + nomFichier + ".pdf"); // Pour le téléchargement direct
+	headers.add("Content-Type", MediaType.APPLICATION_PDF_VALUE); // Type MIME du PDF
+	headers.add("Content-Length", String.valueOf(file.length())); // Taille du fichier (optionnel)
+
+	return ResponseEntity.ok()
+			.headers(headers)
+			.body(resource);
+}
+
+getPdf(nomFichier: string): Observable<Blob> {
+	return this.http.get(`http://localhost:8080/pdf/${nomFichier}`, { responseType: 'blob' });
+}
+
+this.pdfService.getPdf('monPdf').subscribe((blob: Blob) => {
+  const url = window.URL.createObjectURL(blob); // Créer un URL pour le blob
+  const link = document.createElement('a'); // Créer un lien de téléchargement
+  link.href = url;
+  link.setAttribute('download', 'monPdf.pdf'); // Nom du fichier
+  document.body.appendChild(link);
+  link.click(); // Déclencher le téléchargement
+  link.remove(); // Supprimer le lien
+});
+
+// EN MODE BASE 64
+@GetMapping("/pdf/{nomFichier}")
+public ResponseEntity<String> getPdfBase64(@PathVariable String nomFichier) throws IOException {
+
+	File file = new File("/path/to/pdf/directory/" + nomFichier + ".pdf");
+	FileInputStream fis = new FileInputStream(file);
+	byte[] fileContent = new byte[(int) file.length()];
+	fis.read(fileContent);
+	String encodedString = Base64.encodeBase64String(fileContent); // Encodage en Base64
+
+	return new ResponseEntity<>(encodedString, HttpStatus.OK);
+}
+
+getPdfBase64(nomFichier: string): Observable<string> {
+	return this.http.get(`http://localhost:8080/pdf/${nomFichier}`, { responseType: 'text' });
+}
+
+this.pdfService.getPdfBase64('monPdf').subscribe((base64: string) => {
+  const byteCharacters = atob(base64); // Décodage du Base64
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: 'application/pdf' }); // Créer un blob à partir des données binaires
+  const url = window.URL.createObjectURL(blob);
+  // ... (code pour afficher le PDF ou le télécharger, comme dans l'exemple précédent)
+});
+
