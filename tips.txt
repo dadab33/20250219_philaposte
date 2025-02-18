@@ -1,3 +1,27 @@
+Actuator :
+
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+		
+@Configuration
+public class SecurityConfig {
+	@Bean
+	public SecurityFilterChain securityWebFilterChain(HttpSecurity http) throws Exception {
+	    return http
+	      .authorizeHttpRequests(auth -> auth
+	        .requestMatchers("/actuator/**").permitAll()
+	        .anyRequest().authenticated())
+	      .build();
+	}
+}
+
+
 Manip de deux API :
 https://restful-api.dev/
 https://adresse.data.gouv.fr/api-doc/adresse
