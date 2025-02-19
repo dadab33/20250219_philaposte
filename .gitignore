@@ -1,23 +1,23 @@
-demo/HELP.md
-demo/target/
-!demo/.mvn/wrapper/maven-wrapper.jar
-!demo/**/src/main/**/target/
-!demo/**/src/test/**/target/
+formation/HELP.md
+formation/target/
+!formation/.mvn/wrapper/maven-wrapper.jar
+!formation/**/src/main/**/target/
+!formation/**/src/test/**/target/
 
 ### STS ###
-demo/.apt_generated
-demo/.classpath
-demo/.factorypath
-demo/.project
-demo/.settings
-demo/.springBeans
-demo/.sts4-cache
+formation/.apt_generated
+formation/.classpath
+formation/.factorypath
+formation/.project
+formation/.settings
+formation/.springBeans
+formation/.sts4-cache
 
 ### IntelliJ IDEA ###
-demo/.idea
-demo/*.iws
-demo/*.iml
-demo/*.ipr
+formation/.idea
+formation/*.iws
+formation/*.iml
+formation/*.ipr
 
 ### VS Code ###
-demo/.vscode/
+formation/.vscode/
