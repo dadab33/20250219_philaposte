@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import fr.philaposte.formation.bean.ApiError;
+import fr.philaposte.formation.exception.AddOrdiEmptyParamException;
 import fr.philaposte.formation.exception.AddOrdiException;
 import fr.philaposte.formation.exception.DeleteOrdiException;
 import fr.philaposte.formation.exception.GetOrdiException;
@@ -21,6 +22,11 @@ public class OrdinateurControllerAdvice {
 	@ExceptionHandler(AddOrdiException.class)
 	public ResponseEntity<ApiError> onAddOrdiException() {
 		return new ResponseEntity<ApiError>(new ApiError("003", "Une erreur est survenue durant l'ajout d'un ordi"), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AddOrdiEmptyParamException.class)
+	public ResponseEntity<ApiError> onAddOrdiEmptyParamException() {
+		return new ResponseEntity<ApiError>(new ApiError("008", "Et oh ! Comment veux tu que j'ajoute un ordi si tu ne me passes rien !!!"), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(GetOrdiException.class)

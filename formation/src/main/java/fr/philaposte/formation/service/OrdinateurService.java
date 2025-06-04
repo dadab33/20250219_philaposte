@@ -26,11 +26,15 @@ public class OrdinateurService {
 	private RestTemplate restTemplate;
 	
 	public OrdinateurOutput addOrdi(OrdinateurInput ordi) throws AddOrdiException {
-		var reponse = restTemplate.postForEntity("https://api.restful-api.dev/objects", ordi, OrdinateurOutput.class);
-		
-		if(reponse.getStatusCode().is2xxSuccessful()) {
-			return reponse.getBody();
-		} else {
+		try {
+			var reponse = restTemplate.postForEntity("https://api.restful-api.dev/objects", ordi, OrdinateurOutput.class);
+			
+			if(reponse.getStatusCode().is2xxSuccessful()) {
+				return reponse.getBody();
+			} else {
+				throw new AddOrdiException(null);
+			}			
+		} catch (Exception e) {
 			throw new AddOrdiException(null);
 		}
 	}

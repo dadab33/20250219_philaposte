@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import fr.philaposte.formation.bean.ApiError;
 import fr.philaposte.formation.exception.SearchAdresseDataGouvException;
 import fr.philaposte.formation.exception.SearchAdresseDataGouvParamEmptyException;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class AdresseControllerAdvice {
 
 	@ExceptionHandler(SearchAdresseDataGouvException.class)
-	public ResponseEntity<ApiError> onSearchAdresseDataGouvException() {
+	public ResponseEntity<ApiError> onSearchAdresseDataGouvException(HttpServletRequest req, Exception ex) {
 		return new ResponseEntity<ApiError>(new ApiError("001", "Une erreur est survenue durant l'appel à l'API Data Gouv"), HttpStatus.BAD_REQUEST);
 	}
 	

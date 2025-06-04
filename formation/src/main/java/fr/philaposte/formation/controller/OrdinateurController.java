@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.philaposte.formation.bean.ordinateur.OrdinateurInput;
 import fr.philaposte.formation.bean.ordinateur.OrdinateurOutput;
+import fr.philaposte.formation.exception.AddOrdiEmptyParamException;
 import fr.philaposte.formation.exception.AddOrdiException;
 import fr.philaposte.formation.exception.DeleteOrdiException;
 import fr.philaposte.formation.exception.GetOrdiException;
@@ -27,7 +28,11 @@ public class OrdinateurController {
 	private OrdinateurService ordinateurService;
 	
 	@PostMapping
-	public OrdinateurOutput addOrdinateur(@RequestBody(required = true) OrdinateurInput ordi) throws AddOrdiException {
+	public OrdinateurOutput addOrdinateur(@RequestBody(required = false) OrdinateurInput ordi) throws AddOrdiException, AddOrdiEmptyParamException {
+		if(ordi == null) {
+			throw new AddOrdiEmptyParamException(null);
+		}
+		
 		return ordinateurService.addOrdi(ordi);
 	}
 	
